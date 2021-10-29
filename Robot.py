@@ -13,7 +13,7 @@ api_secret = BinanceKey1['api_secret']
 client = Client(api_key, api_secret)
 
 # get a deposit address for BTC
-address = client.get_deposit_address(asset='BTC')
+address = client.get_deposit_address(coin='BTC')
 
 
 def run():
@@ -32,24 +32,24 @@ def run():
 
     try:
         # Example Visualizations of Coins
-        save_historical_data_Roibal.save_historic_klines_csv('BTCUSDT', "1 hours ago UTC", "now UTC",
+        save_historical_data_new.save_historic_klines_csv('BTCUSDT', "1 hours ago UTC", "now UTC",
                                                              Client.KLINE_INTERVAL_1MINUTE)
-        save_historical_data_Roibal.save_historic_klines_csv('ETHBTC', "6 months ago UTC", "now UTC",
+        save_historical_data_new.save_historic_klines_csv('ETHBTC', "6 months ago UTC", "now UTC",
                                                              Client.KLINE_INTERVAL_1DAY)
-        save_historical_data_Roibal.save_historic_klines_csv('BRDBNB', "8 hours ago UTC", "now UTC",
+        save_historical_data_new.save_historic_klines_csv('BRDBNB', "8 hours ago UTC", "now UTC",
                                                              Client.KLINE_INTERVAL_3MINUTE)
-        save_historical_data_Roibal.save_historic_klines_csv('BTCUSDT', "12 months ago UTC", "now UTC",
+        save_historical_data_new.save_historic_klines_csv('BTCUSDT', "12 months ago UTC", "now UTC",
                                                              Client.KLINE_INTERVAL_1WEEK)
-        save_historical_data_Roibal.save_historic_klines_csv('ETHUSDT', "8 hours ago UTC", "now UTC",
+        save_historical_data_new.save_historic_klines_csv('ETHUSDT', "8 hours ago UTC", "now UTC",
                                                              Client.KLINE_INTERVAL_15MINUTE)
 
         # Visualize All Micro Cap Coins for 8 hour period and 3 minute Candlestick
         for coin in micro_cap_coins:
-            save_historical_data_Roibal.save_historic_klines_csv(coin, "8 hours ago UTC", "now UTC",
+            save_historical_data_new.save_historic_klines_csv(coin, "8 hours ago UTC", "now UTC",
                                                                  Client.KLINE_INTERVAL_3MINUTE)
-            save_historical_data_Roibal.save_historic_klines_csv(coin, "24 hours ago UTC", "now UTC",
+            save_historical_data_new.save_historic_klines_csv(coin, "24 hours ago UTC", "now UTC",
                                                                  Client.KLINE_INTERVAL_15MINUTE)
-            save_historical_data_Roibal.save_historic_klines_csv(coin, "1 month ago UTC", "now UTC",
+            save_historical_data_new.save_historic_klines_csv(coin, "1 month ago UTC", "now UTC",
                                                                  Client.KLINE_INTERVAL_1DAY)
 
     except():
