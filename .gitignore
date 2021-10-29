@@ -100,4 +100,6 @@ pip-selfcheck.json
 
 .idea/
 
+.BinanceKeys.py
+
 
