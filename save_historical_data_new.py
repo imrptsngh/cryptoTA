@@ -6,7 +6,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import matplotlib.dates as mdates
-import mpl_finance #import candlestick_ohlc
+from mplfinance.original_flavor import candlestick_ochl
 
 from datetime import datetime
 from binance.client import Client
@@ -272,7 +272,7 @@ def save_historic_klines_csv(symbol, start, end, interval):
 
     #Matplotlib visualization how-to from: https://pythonprogramming.net/candlestick-ohlc-graph-matplotlib-tutorial/
     fig, ax = plt.subplots()
-    mpl_finance.candlestick_ochl(ax, ochl, width=1)
+    candlestick_ochl(ax, ochl, width=1)
     plt.plot(time3, three_period_moving_ave, color='green', label='3 Period MA - Open')
     plt.plot(time10, ten_period_moving_ave, color='blue', label='10 Period MA - Open')
     #ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d-%h-%m')) #Converting to date format not working
