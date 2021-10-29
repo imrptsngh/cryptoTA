@@ -12,25 +12,24 @@ from datetime import datetime
 from binance.client import Client
 from BinanceKeys import BinanceKey1
 
-
 api_key = BinanceKey1['api_key']
 api_secret = BinanceKey1['api_secret']
 
 client = Client(api_key, api_secret)
-list_of_symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT','BNBBTC', 'ETHBTC', 'LTCBTC']
+list_of_symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'BNBBTC', 'ETHBTC', 'LTCBTC']
 
 
 def run():
     # get system status
-    #client.ping()
+    # client.ping()
     status = client.get_system_status()
     print("\nExchange Status: ", status)
 
-    #Account Withdrawal History Info
+    # Account Withdrawal History Info
     withdraws = client.get_withdraw_history()
     print("\nClient Withdraw History: ", withdraws)
 
-    #get Exchange Info
+    # get Exchange Info
     info = client.get_exchange_info()
     print("\nExchange Info (Limits): ", info)
 
@@ -47,34 +46,35 @@ def run():
     for symbol in list_of_symbols:
         market_depth(symbol)
 
-    #save_historic_klines_datafile("ETHBTC", "1 Dec, 2017", "1 Jan, 2018", Client.KLINE_INTERVAL_30MINUTE)
+    # save_historic_klines_datafile("ETHBTC", "1 Dec, 2017", "1 Jan, 2018", Client.KLINE_INTERVAL_30MINUTE)
 
-    #save_historic_klines_datafile("BTCUSDT", "12 hours ago UTC", "Now UTC", Client.KLINE_INTERVAL_1MINUTE)
+    # save_historic_klines_datafile("BTCUSDT", "12 hours ago UTC", "Now UTC", Client.KLINE_INTERVAL_1MINUTE)
+
 
 def market_depth(sym, num_entries=10):
-    #Get market depth
-    #Retrieve and format market depth (order book) including time-stamp
-    i=0     #Used as a counter for number of entries
+    # Get market depth
+    # Retrieve and format market depth (order book) including time-stamp
+    i = 0  # Used as a counter for number of entries
     print("Order Book: ", convert_time_binance(client.get_server_time()))
     depth = client.get_order_book(symbol=sym)
     print("\n", sym, "\nDepth     ASKS:\n")
     print("Price     Amount")
     for ask in depth['asks']:
-        if i<num_entries:
+        if i < num_entries:
             print(ask)
-            i+=1
-    j=0     #Secondary Counter for Bids
+            i += 1
+    j = 0  # Secondary Counter for Bids
     print("\n", sym, "\nDepth     BIDS:\n")
     print("Price     Amount")
     for bid in depth['bids']:
-        if j<num_entries:
+        if j < num_entries:
             print(bid)
-            j+=1
+            j += 1
 
 
 def coin_prices(watch_list):
-    #Will print to screen, prices of coins on 'watch list'
-    #returns all prices
+    # Will print to screen, prices of coins on 'watch list'
+    # returns all prices
     prices = client.get_all_tickers()
     print("\nSelected (watch list) Ticker Prices: ")
     for price in prices:
@@ -92,7 +92,6 @@ def coin_tickers(watch_list):
         if tick['symbol'] in watch_list:
             print(tick)
     return tickers
-
 
 
 def date_to_milliseconds(date_str):
@@ -141,19 +140,19 @@ def interval_to_milliseconds(interval):
 
 
 def convert_time_binance(gt):
-    #Converts from Binance Time Format (milliseconds) to time-struct
-    #gt = client.get_server_time()
+    # Converts from Binance Time Format (milliseconds) to time-struct
+    # gt = client.get_server_time()
     print("Binance Time: ", gt)
     print(time.localtime())
     aa = str(gt)
-    bb = aa.replace("{'serverTime': ","")
-    aa = bb.replace("}","")
-    gg=int(aa)
-    ff=gg-10799260
-    uu=ff/1000
-    yy=int(uu)
-    tt=time.localtime(yy)
-    #print(tt)
+    bb = aa.replace("{'serverTime': ", "")
+    aa = bb.replace("}", "")
+    gg = int(aa)
+    ff = gg - 10799260
+    uu = ff / 1000
+    yy = int(uu)
+    tt = time.localtime(yy)
+    # print(tt)
     return tt
 
 
@@ -230,19 +229,20 @@ def get_historical_klines(symbol, interval, start_str, end_str=None):
 
     return output_data
 
+
 def save_historic_klines_csv(symbol, start, end, interval):
     klines = get_historical_klines(symbol, interval, start, end)
     ochl = []
     list_of_open = []
     three_period_moving_ave = []
-    time3=[]
+    time3 = []
     five_period_moving_ave = []
     ten_period_moving_ave = []
-    time10=[]
+    time10 = []
     with open('Binance_{}_{}-{}.txt'.format(symbol, start, end), 'w') as f:
         f.write('Time, Open, High, Low, Close, Volume\n')
         for kline in klines:
-            #print(kline)
+            # print(kline)
             time1 = int(kline[0])
             open1 = float(kline[1])
             Low = float(kline[2])
@@ -253,50 +253,52 @@ def save_historic_klines_csv(symbol, start, end, interval):
             ochl.append([time1, open1, Close, High, Low, Volume])
             f.write(format_kline)
 
-            #track opening prices, use for calculating moving averages
+            # track opening prices, use for calculating moving averages
             list_of_open.append(open1)
-                #Calculate three 'period' moving average - Based on Candlestick duration
-            if len(list_of_open)>2:
-                price3=0
+            # Calculate three 'period' moving average - Based on Candlestick duration
+            if len(list_of_open) > 2:
+                price3 = 0
                 for pri in list_of_open[-3:]:
-                    price3+=pri
-                three_period_moving_ave.append(float(price3/3))
+                    price3 += pri
+                three_period_moving_ave.append(float(price3 / 3))
                 time3.append(time1)
-            #Perform Moving Average Calculation for 10 periods
-            if len(list_of_open)>9:
-                price10=0
+            # Perform Moving Average Calculation for 10 periods
+            if len(list_of_open) > 9:
+                price10 = 0
                 for pri in list_of_open[-10:]:
-                    price10+=pri
-                ten_period_moving_ave.append(float(price10/10))
+                    price10 += pri
+                ten_period_moving_ave.append(float(price10 / 10))
                 time10.append(time1)
 
-    #Matplotlib visualization how-to from: https://pythonprogramming.net/candlestick-ohlc-graph-matplotlib-tutorial/
+    # Matplotlib visualization how-to from: https://pythonprogramming.net/candlestick-ohlc-graph-matplotlib-tutorial/
     fig, ax = plt.subplots()
     candlestick_ochl(ax, ochl, width=1)
     plt.plot(time3, three_period_moving_ave, color='green', label='3 Period MA - Open')
     plt.plot(time10, ten_period_moving_ave, color='blue', label='10 Period MA - Open')
-    #ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d-%h-%m')) #Converting to date format not working
+    # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d-%h-%m')) #Converting to date format not working
     ax.set(xlabel='Date', ylabel='Price', title='{} {}-{}'.format(symbol, start, end))
     plt.legend()
     plt.show()
 
+
 def save_historic_klines_datafile(symbol, start, end, interval):
-    #Collects kline historical data , output and saves to file
+    # Collects kline historical data , output and saves to file
     klines = get_historical_klines(symbol, interval, start, end)
 
     # open a file with filename including symbol, interval and start and end converted to milliseconds
     with open(
-        "Binance_{}_{}_{}-{}_{}-{}.json".format(
-            symbol,
-            interval,
-            start,
-            end,
-            date_to_milliseconds(start),
-            date_to_milliseconds(end)
-        ),
-        'w'  # set file write mode
+            "Binance_{}_{}_{}-{}_{}-{}.json".format(
+                symbol,
+                interval,
+                start,
+                end,
+                date_to_milliseconds(start),
+                date_to_milliseconds(end)
+            ),
+            'w'  # set file write mode
     ) as f:
         f.write(json.dumps(klines))
+
 
 if __name__ == "__main__":
     run()
